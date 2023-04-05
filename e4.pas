@@ -30,46 +30,70 @@ type
     detalle = file of log;
     maestro = file of ma;
 
+    vec = array [1..5] of detalle;
+    vlog = array[1..5] of log;
+
 procedure leer(var a:detalle; var d:log);
 begin
     if (not eof(a)) then begin
         read(a,d);
+    end
     else 
         d.cod_usuario := valoralto;
 end;
 
+procedure armar(var v:vec);
+var
+    i:integer;
+begin
+    for i:=0 to 5 do begin
+        assign(v[i], 'det' + i);
+        reset(v[i]);
+    end;
+end;
 
+procedure minimo(var v:vec;var min: log;var vl:vlog);
+var
+    min_cod,actual,i: integer;
+begin
+    min_cod := valoralto;
+    for i:= 1 to 5 do begin
+        if (vl[i].cod_usuario < min_cod) then begin
+            actual := i;
+            min := vl[i];
+        end;
+        if (min.cod_usuario <> valoralto) then leer(v[actual],vl[actual]);
+    end;
 
 end;
 
+    
+
 var
-    d1,d2,d3,d4,d5 : detalle;
-    min,r1,r2,r3,r4 : log;
-    ma: maestro;
-    mr: mae;
-    i:integer //nomas para el el for de assign
+    v:vec;
+    vl:vlog;
+    mae:maestro;
+    min:log;
+    i,code,total:integer;
 begin
-    assign(d1,'detalle1');
-    assign(d2,'detalle2');
-    assign(d3,'detalle3');
-    assign(d4,'detalle4');
-    assign(d5,'detalle5');//hasta aca detalles
-    assign(ma,'maestro');
+    armar(v); //asigno y abro lo archivo detalle 
+    rewrite(mae);
+    for i:=0 to 5 do begin
+      leer(v[i],vl[i]);
+    end;
+    minimo(v,min,vl); //el merge
+    while (min.cod_usuario <> valoralto) do begin
+        code := min.code_usuario;
+        total := 0
+        while (code = min.code_usuario) do begin //recordar agregar fecha como variable para despues agregarlo al maestro
+            total := total + min.tiempo_sesion;
+            minimo(v,min,vl);
+        end;
+        write(mae,min);
+    end;
 
-    rewrite(ma);//creo el nuevo archivo maestro
-    reset(d1);
-    reset(d2);
-    reset(d3);
-    reset(d4);
-    reset(d5);
-
-    leer(d1,r1);
-    leer(d1,r2);
-    leer(d1,r3);
-    leer(d1,r4);
-    leer(d1,r5);
-
-    //se llama al procedimiento minimo (recordar usar corte de control);
-
-    //hacer los close
+    for i:=0 to 5 do begin
+        close(v[i]);
+    end;
+    close(mae);
 end.
