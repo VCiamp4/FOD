@@ -43,7 +43,7 @@ begin
         leer(a,e);
     end;
 
-    //se tiene que agregar el truncate(a) al final del ejercicio, no aca.
+    //se tiene que agregar el truncate(a) al final del ejercicio, no aca!.
 end;
 
 
