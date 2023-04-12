@@ -1,12 +1,12 @@
 program ejercicio4FOD;
 type 
 		empleados = record
-		num:integer;
-		apellido:string;
-		nombre:string;
-		edad:integer;
-		dni:integer;
-	end;
+			num:integer;
+			apellido:string;
+			nombre:string;
+			edad:integer;
+			dni:integer;
+		end;
 	
 	archivo = file of empleados;
 
@@ -30,4 +30,6 @@ begin
 	e.edad := e.edad + 1;
 end;
 
+
+		
 	
