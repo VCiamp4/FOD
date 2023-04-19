@@ -23,10 +23,10 @@ type
 
     archivo = file of ave;
 
-    lista := ^nodo;
+    lista = ^nodo;
 
     nodo = record
-        dato: string;
+        dato: integer;
         sig: lista;
     end;
 
@@ -35,7 +35,7 @@ var
     v:ave;
 begin
     v.code := 0;
-    while (v.code > -1) then begin
+    while (v.code > -1) do begin
         writeln('--Ingrese codigo: ');read(v.code);
         writeln('--Especie: ');read(v.especie);
         writeln('--Familia: ');read(v.familia);
@@ -47,10 +47,10 @@ begin
 end;
 
 
-procedure leer(var a:archivio;var v:ave);
+procedure leer(var a:archivo;var v:ave);
 begin
     if (not eof(a)) then
-        read(a,v);
+        read(a,v)
     else
         v.code:= valoralto;
 end;
@@ -59,7 +59,7 @@ procedure lista_codigos(var l:lista;c:integer);
 var
     aux: lista;
 begin
-    new(aux)
+    new(aux);
     aux^.dato := c;
     aux^.sig := l;
     l:=aux;
@@ -70,11 +70,12 @@ var
     aux:lista;
     v:ave;
 begin
-    while (l^.sig := null) do begin
+	aux := l;
+    while (aux^.sig <> nil) do begin
         //vuelvo al principio del archivo
         leer(a,v);
         while (v.code <> valoralto) do begin
-            if (v.especio = aux^.dato) then begin
+            if (v.code = aux^.dato) then begin
                 v.code := -v.code;
                 seek(a,filepos(a)-1);
                 write(a,v);
@@ -82,13 +83,16 @@ begin
             leer(a,v);
         seek(a,0);
         l := l^.sig;
-    end;
-    writeln('Elementos marcados con exito!');
+		end;
+		writeln('Elementos marcados con exito!');
+	end;
 end;
 
-procedure borrar (var a:archivo);
+procedure borrar(var a:archivo);
 var
-    v:ave;pos:integer;aux:ave;
+    v:ave;
+    pos:integer;
+    aux:ave;
 begin
     while (not eof(a)) do begin
         leer(a,v);
@@ -120,7 +124,7 @@ begin
     assign(texto,'aves.txt');
     rewrite(texto);
     leer(a,aux);
-    while (aux.code <> valoralto) then begin
+    while (aux.code <> valoralto) do begin
         write(texto,aux.code,'',aux.especie);
         write(texto,aux.familia);
         write(texto,aux.desc);
@@ -138,10 +142,10 @@ begin
     rewrite(a);
 
     cargar_archivo(a);
-
+    
     writeln('----Ingrese especies de aves a borrar----');
     read(st);
-    while (st <> 50000) do begin
+    while (st <> 5000) do begin
         lista_codigos(l,st);
         write('Ingrese codigo de especie a borrar: ');
         read(st);
